@@ -191,7 +191,7 @@ let failures=0;
 for(const id of ["dark","light","highDark","highLight"]){
  const path=join(root,"themes",id+"-color-theme.json");
  const actual=JSON.stringify(makeTheme(id,palettes[id]),null,2)+"\n";
- if(process.argv.includes("--check")){if(readFileSync(path,"utf8")!==actual){console.error("Out of sync:",id);failures++;}}
+ if(process.argv.includes("--check")){if(readFileSync(path,"utf8").replace(/\r\n/g,"\n")!==actual){console.error("Out of sync:",id);failures++;}}
  else writeFileSync(path,actual);
 }
 if(failures)process.exitCode=1;

@@ -13,3 +13,8 @@
 - [ ] Obtain explicit publication authorization
 ## Restrictions
 Preview only. No release or registry publishing without authorization. No claims of manual validation.
+
+## CI remediation (2026-11-13)
+- [x] Windows-only CRLF vs LF false-positive reproduced from CI matrix and generated-file comparison; JSON generator normalizes CRLF on read.
+- [x] Added `.gitattributes` so generated JSON remains LF after Windows checkout.
+- [ ] Confirm new Windows, Ubuntu and macOS CI green for this commit; prior Ubuntu/macOS passed, Windows failed.
