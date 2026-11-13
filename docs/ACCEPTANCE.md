@@ -1,25 +1,29 @@
-# Acceptance checklist — 0.1.0
-- [x] Four declarative themes and semantic token rules
-- [x] Versioned identity and official glyph used unchanged
-- [x] Build generator, focused tests, no activation
-- [x] Linux/Windows/macOS CI configured
-- [ ] Confirm `npm run check` green in GitHub Actions
-- [ ] Verify packaged VSIX and SHA-256 from CI
-- [ ] Install VSIX on actual VS Code and ArmoTuSitio IDE
-- [ ] Compare authentic Dark/Light and HC screenshots from Extension Development Host
-- [ ] Confirm cross-editor accessibility with screen reader
-- [ ] Configure GitHub main ruleset and repository merge settings (requires repository-admin API)
-- [ ] Register trusted publisher for Marketplace and Open VSX (requires manual registry setup)
-- [ ] Obtain explicit publication authorization
-## Restrictions
-Preview only. No release or registry publishing without authorization. No claims of manual validation.
+# Acceptance checklist — ArmoTuSitio Theme 0.1.0 Preview
 
-## CI remediation (2026-11-13)
-- [x] Windows-only CRLF vs LF false-positive reproduced from CI matrix and generated-file comparison; JSON generator normalizes CRLF on read.
-- [x] Added `.gitattributes` so generated JSON remains LF after Windows checkout.
-- [ ] Confirm new Windows, Ubuntu and macOS CI green for this commit; prior Ubuntu/macOS passed, Windows failed.
+## Confirmed in repository
+- [x] Four standalone, declarative color themes (Dark Premium, Light, HC Dark, HC Light)
+- [x] Verified corporate colors and unchanged official glyph (SVG + PNG packaging asset)
+- [x] TextMate and semantic tokens; debug, Git, syntax and terminal surfaces
+- [x] Shared UI tokens for current ArmoTuSitio IDE Chat / Control Center / Accounts views
+- [x] No activationEvents, main entrypoint, runtime dependencies or telemetry
+- [x] Bilingual professional README, moodboard, brand manual, version history
+- [x] Focused generator, contrast, semantic and shared-token tests
+- [x] Tri-OS GitHub Actions, VSIX inspection and SHA-256 in PR artifacts
+- [x] OIDC publish workflow remains workflow_dispatch-only, with existing VSIX reuse
 
-## Packaging CI remediation (2026-11-13)
-- [x] Confirmed npm `@vscode/vsce@4.0.2` is unpublished (ETARGET); pinned published stable `4.1.0` in packaging and OIDC workflow.
-- [x] All three OS targeted tests passed on previous CI (`43522894080`); only packaging failed due to unpublished tool version.
-- [ ] Verify VSIX creation and SHA-256 on latest PR CI run.
+## Previous verified CI
+- [x] https://github.com/Drako01/theme/actions/runs/43523055218 — Ubuntu PASS, Windows PASS, macOS PASS, package PASS, validated-vsix produced
+- [x] CRLF-only Windows mismatch fixed in c0a298655df5e6390f007c4e8be1ba2b1889fabf
+- [x] npm ETARGET packaging failure fixed in cd3bcdd5ecca61868e860c5b575e9dbddef27234
+
+## Release blockers / acceptance pending
+- [ ] **Latest PR head**: tri-OS jobs all green and VSIX + SHA-256 artifact verified (prior CI does not cover new edits)
+- [ ] Install real VSIX in current VS Code and ArmoTuSitio IDE (both fresh and existing profile)
+- [ ] Capture genuine Extension Development Host screenshots for all four variants, including IDE Chat and multilingual code
+- [ ] Manual accessibility acceptance (focus/hover/selection, high contrast, long sessions, screen reader)
+- [ ] Configure main ruleset / PR required / squash-only / linear history in repository settings
+- [ ] Configure environment protection and trusted publishers for marketplace and open-vsx
+- [ ] Obtain explicit authorization for merge and later for registry publication
+
+## Release restrictions
+Preview only: `preview: true`. No registry publishing or GitHub release is authorized. Do not describe simulated moodboard as a functional screenshot. Do not claim real runtime installation or manual accessibility verification until independently checked.

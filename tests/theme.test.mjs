@@ -9,6 +9,9 @@ for(const entry of pkg.contributes.themes){
  const t=JSON.parse(readFileSync(new URL("../"+entry.path,import.meta.url)));
  assert.equal(t.semanticHighlighting,true);assert.equal(t.type,entry.uiTheme==="vs"?"light":entry.uiTheme==="vs-dark"?"dark":entry.uiTheme);
  assert.ok(Object.keys(t.colors).length>=90);assert.ok(t.tokenColors.length>=12);
+ const ideSharedTokens=["button.secondaryHoverBackground","inputValidation.warningBackground","inputValidation.errorBackground","testing.iconPassed","testing.iconFailed","testing.iconQueued","textCodeBlock.background","textBlockQuote.background","toolbar.hoverBackground"];
+ for(const key of ideSharedTokens){assert.match(t.colors[key],/^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/,entry.label+" missing "+key);}
+ assert.ok(t.semanticTokenColors["function"] && t.semanticTokenColors["class"]);
  for(const id of ["editor.background","editor.foreground","sideBar.background","sideBar.foreground","input.background","input.foreground","tab.activeBackground","tab.activeForeground","terminal.background","terminal.foreground","statusBar.background","statusBar.foreground"]){assert.match(t.colors[id],/^#[0-9A-Fa-f]{6}$/);}
  for(const [fg,bg] of [["editor.foreground","editor.background"],["sideBar.foreground","sideBar.background"],["input.foreground","input.background"],["terminal.foreground","terminal.background"],["tab.activeForeground","tab.activeBackground"],["statusBar.foreground","statusBar.background"]]){
  const ratio=contrast(t.colors[fg],t.colors[bg]);const min=entry.uiTheme.startsWith("hc")?7:4.5;
