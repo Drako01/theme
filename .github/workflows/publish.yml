@@ -84,7 +84,16 @@ jobs:
           [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "::error::Invalid CI run ID"; exit 1; }
           pr_tree=$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha" --jq .commit.tree.sha)
           main_tree=$(git rev-parse 'HEAD^{tree}')
-          [[ "$pr_tree" == "$main_tree" ]] || { echo "::error::Merged tree differs from verified PR tree"; exit 1; }
+          if [[ "$EVENT" == "workflow_dispatch" ]]; then
+            # Recovery after a workflow-only fix: preserve the provenance of the
+            # ORIGINAL v0.1.1 release, not the subsequently modified main tree.
+            release_tag="v${version}"
+            git fetch --no-tags origin "refs/tags/${release_tag}:refs/tags/${release_tag}"
+            approved_tree=$(git rev-parse "${release_tag}^{tree}")
+            [[ "$pr_tree" == "$approved_tree" ]] || { echo "::error::PR tree does not match the immutable release tag"; exit 1; }
+          else
+            [[ "$pr_tree" == "$main_tree" ]] || { echo "::error::Merged tree differs from verified PR tree"; exit 1; }
+          fi
 
           gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml" > workflow.json
           expected_workflow=$(jq -r .id workflow.json)
@@ -176,7 +185,10 @@ jobs:
             exit 0
           fi
           [[ "$status" == "404" ]] || { echo "::error::Open VSX version lookup failed: HTTP $status"; exit 1; }
-          npx --yes ovsx@1.1.1 publish "dist/armotusitio-theme-$VERSION.vsix" --trusted-publishing
+          # The previously pinned ovsx CLI rejected --trusted-publishing.
+          # Match documented CLI syntax; check capabilities before attempting an upload.
+          npx --yes ovsx@1.4.0 publish --help | grep -F -- '--trusted-publishing'
+          npx --yes ovsx@1.4.0 publish --trusted-publishing "dist/armotusitio-theme-$VERSION.vsix"
 
   release:
     name: GitHub release after successful Marketplace publication
