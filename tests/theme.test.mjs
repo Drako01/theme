@@ -37,3 +37,12 @@ test("release uses a validated PR artifact for version-bump auto-publishing", ()
   assert.match(publish,/--trusted-publishing/);
   assert.doesNotMatch(publish,/npm run check|node --test/);
 });
+
+test("Open VSX recovery checks release tag and a CLI with trusted-publishing", () => {
+  const publish=readFileSync(new URL("../.github/workflows/publish.yml",import.meta.url),"utf8");
+  assert.match(publish,/refs\/tags\/\$\{release_tag\}/);
+  assert.match(publish,/PR tree does not match the immutable release tag/);
+  assert.match(publish,/ovsx@1\.4\.0 publish --help/);
+  assert.match(publish,/ovsx@1\.4\.0 publish --trusted-publishing/);
+  assert.doesNotMatch(publish,/ovsx@1\.1\.1/);
+});
