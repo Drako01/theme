@@ -1,0 +1,61 @@
+{
+  "name": "armotusitio-theme",
+  "displayName": "ArmoTuSitio Theme",
+  "description": "Four accessible, performance-first editor themes inspired by ArmoTuSitio's verified brand palette.",
+  "version": "0.1.0",
+  "preview": true,
+  "publisher": "armotusitio",
+  "license": "MIT",
+  "icon": "assets/ats-glyph.svg",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "armotusitio",
+    "theme",
+    "dark",
+    "light",
+    "high contrast",
+    "accessible"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Drako01/theme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Drako01/theme/issues"
+  },
+  "homepage": "https://armotusitio.com.ar/",
+  "contributes": {
+    "themes": [
+      {
+        "label": "ArmoTuSitio Dark Premium",
+        "uiTheme": "vs-dark",
+        "path": "./themes/dark-color-theme.json"
+      },
+      {
+        "label": "ArmoTuSitio Light",
+        "uiTheme": "vs",
+        "path": "./themes/light-color-theme.json"
+      },
+      {
+        "label": "ArmoTuSitio High Contrast Dark",
+        "uiTheme": "hc-black",
+        "path": "./themes/highDark-color-theme.json"
+      },
+      {
+        "label": "ArmoTuSitio High Contrast Light",
+        "uiTheme": "hc-light",
+        "path": "./themes/highLight-color-theme.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node scripts/generate.mjs",
+    "check": "node scripts/generate.mjs --check && node --test tests/*.test.mjs",
+    "package": "npx --yes @vscode/vsce@4.0.2 package --no-dependencies --out dist/armotusitio-theme-0.1.0.vsix"
+  }
+}

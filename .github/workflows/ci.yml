@@ -1,0 +1,41 @@
+name: Preview CI
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Targeted validation
+        run: npm run check
+  package:
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: mkdir -p dist
+      - name: Package once
+        run: npm run package
+      - name: Verify real VSIX and checksum
+        run: python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.0.vsix
+      - uses: actions/upload-artifact@v4
+        with:
+          name: validated-vsix
+          path: |
+            dist/*.vsix
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 30
