@@ -1,0 +1,89 @@
+name: Publish validated artifact (MANUAL ONLY)
+on:
+  workflow_dispatch:
+    inputs:
+      ci_run_id:
+        description: Successful PR CI run ID containing validated-vsix
+        required: true
+        type: string
+      pr_head_sha:
+        description: Exact reviewed PR head SHA
+        required: true
+        type: string
+      registry:
+        description: Destination (never automatic)
+        required: true
+        type: choice
+        options: [marketplace, open-vsx]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  provenance:
+    runs-on: ubuntu-latest
+    outputs:
+      registry: ${{ inputs.registry }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require reviewed PR tree and successful PR CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.ci_run_id }}
+          HEAD_SHA: ${{ inputs.pr_head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "${GITHUB_REF}" == "refs/heads/main" ]] || exit 1
+          [[ "$HEAD_SHA" =~ ^[a-fA-F0-9]{40}$ ]] || exit 1
+          gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}" > run.json
+          python3 - <<'PY'
+          import json,os
+          run=json.load(open("run.json"))
+          assert run["event"]=="pull_request" and run["conclusion"]=="success"
+          assert run["head_sha"]==os.environ["HEAD_SHA"]
+          PY
+          git fetch --no-tags origin "$HEAD_SHA"
+          [[ "$(git rev-parse HEAD^{tree})" == "$(git rev-parse FETCH_HEAD^{tree})" ]] || { echo "Reviewed tree differs from merged tree"; exit 1; }
+          gh run download "$RUN_ID" -n validated-vsix -D dist
+          (cd dist && sha256sum -c *.sha256)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: approved-vsix-for-publish
+          path: dist/*.vsix
+          retention-days: 1
+  marketplace:
+    if: inputs.registry == 'marketplace'
+    needs: provenance
+    runs-on: ubuntu-latest
+    environment: marketplace
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: approved-vsix-for-publish
+          path: dist
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npx --yes @vscode/vsce@4.1.0 publish --oidc --packagePath dist/armotusitio-theme-0.1.0.vsix
+  open-vsx:
+    if: inputs.registry == 'open-vsx'
+    needs: provenance
+    runs-on: ubuntu-latest
+    environment: open-vsx
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: approved-vsix-for-publish
+          path: dist
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npx --yes ovsx@1.1.1 publish dist/armotusitio-theme-0.1.0.vsix --trusted-publishing

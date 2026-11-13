@@ -1,0 +1,6 @@
+# Keep generated JSON stable across Windows, macOS, and Linux
+*.json text eol=lf
+*.mjs text eol=lf
+*.yml text eol=lf
+*.py text eol=lf
+*.svg text eol=lf
