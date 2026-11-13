@@ -18,3 +18,8 @@ Preview only. No release or registry publishing without authorization. No claims
 - [x] Windows-only CRLF vs LF false-positive reproduced from CI matrix and generated-file comparison; JSON generator normalizes CRLF on read.
 - [x] Added `.gitattributes` so generated JSON remains LF after Windows checkout.
 - [ ] Confirm new Windows, Ubuntu and macOS CI green for this commit; prior Ubuntu/macOS passed, Windows failed.
+
+## Packaging CI remediation (2026-11-13)
+- [x] Confirmed npm `@vscode/vsce@4.0.2` is unpublished (ETARGET); pinned published stable `4.1.0` in packaging and OIDC workflow.
+- [x] All three OS targeted tests passed on previous CI (`43522894080`); only packaging failed due to unpublished tool version.
+- [ ] Verify VSIX creation and SHA-256 on latest PR CI run.
