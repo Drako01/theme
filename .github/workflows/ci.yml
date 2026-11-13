@@ -30,7 +30,7 @@ jobs:
       - name: Package once
         run: npm run package
       - name: Verify real VSIX and checksum
-        run: python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.0.vsix
+        run: python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.1.vsix
       - uses: actions/upload-artifact@v4
         with:
           name: validated-vsix

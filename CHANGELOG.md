@@ -2,7 +2,17 @@
 
 Changes to ArmoTuSitio Theme are documented here.
 
-## [0.1.0] — Preview (unreleased)
+## [0.1.1] — Automated OIDC release
+
+- Automatically publish a version-bumping, CI-validated merge to `main` with `publish.yml`.
+- Reuse the PR's original VSIX and SHA-256 without rerunning the cross-platform test suite or rebuilding after merge.
+- Verify merged PR head, identical Git trees, successful CI workflow identity, package version and checksum before either registry.
+- Publish the same bytes to Visual Studio Marketplace and Open VSX with registered, short-lived OIDC identities.
+- Create a GitHub Release containing that same VSIX and checksum after Marketplace success.
+- Retain manual dispatch for selective recovery and skip existing published versions.
+- Theme visuals, palettes, names and official logo remain unchanged.
+
+## [0.1.0] — Initial Preview
 
 - Four original color themes based on verified corporate colors: Dark Premium, Light, High Contrast Dark and High Contrast Light.
 - Declarative workbench, terminal ANSI, Git/diff, diagnostics and debugging colors.
@@ -10,7 +20,4 @@ Changes to ArmoTuSitio Theme are documented here.
 - Color tokens aligned with the existing ArmoTuSitio IDE Chat Harness, Control Center and accounts UI.
 - Official brand glyph packaged in SVG and PNG forms; no runtime code or dependencies.
 - Tri-platform PR checks, deterministic JSON generator, VSIX smoke inspection and SHA-256 artifact.
-- Workflow-dispatch-only, OIDC-ready publishing with PR provenance verification.
 - Bilingual README, brand guide, moodboard and honest acceptance checklist.
-
-Not published; real editor screenshots and manual acceptance remain outstanding.

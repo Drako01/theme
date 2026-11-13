@@ -1,4 +1,4 @@
-# Acceptance checklist — ArmoTuSitio Theme 0.1.0 Preview
+# Acceptance checklist — ArmoTuSitio Theme 0.1.1 Preview
 
 ## Confirmed in repository
 - [x] Four standalone, declarative color themes (Dark Premium, Light, HC Dark, HC Light)
@@ -9,7 +9,7 @@
 - [x] Bilingual professional README, moodboard, brand manual, version history
 - [x] Focused generator, contrast, semantic and shared-token tests
 - [x] Tri-OS GitHub Actions, VSIX inspection and SHA-256 in PR artifacts
-- [x] OIDC publish workflow remains workflow_dispatch-only, with existing VSIX reuse
+- [x] Version-bump auto-publish workflow on protected main, plus manual recovery; PR VSIX reuse, exact SHA/tree gate, OIDC
 
 ## Previous verified CI
 - [x] https://github.com/Drako01/theme/actions/runs/43523055218 — Ubuntu PASS, Windows PASS, macOS PASS, package PASS, validated-vsix produced
@@ -22,8 +22,9 @@
 - [ ] Capture genuine Extension Development Host screenshots for all four variants, including IDE Chat and multilingual code
 - [ ] Manual accessibility acceptance (focus/hover/selection, high contrast, long sessions, screen reader)
 - [ ] Configure main ruleset / PR required / squash-only / linear history in repository settings
-- [ ] Configure environment protection and trusted publishers for marketplace and open-vsx
-- [ ] Obtain explicit authorization for merge and later for registry publication
+- [x] Marketplace and Open VSX Trusted Publisher registrations shown by owner for publish.yml (environment names marketplace / open-vsx)
+- [ ] Confirm GitHub environment authorization in first real publish run
+- [ ] Merge the validated 0.1.1 PR to authorize automatic registry publication
 
 ## Release restrictions
-Preview only: `preview: true`. No registry publishing or GitHub release is authorized. Do not describe simulated moodboard as a functional screenshot. Do not claim real runtime installation or manual accessibility verification until independently checked.
+Preview only: `preview: true`. A green, version-bumping PR merge authorizes automatic publishing; do not publish before merge. Do not describe simulated moodboard as a functional screenshot. Do not claim real runtime installation or manual accessibility verification until independently checked.

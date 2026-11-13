@@ -1,61 +1,127 @@
-name: Publish validated artifact (MANUAL ONLY)
+# Auto-release only after a version-bumping, CI-validated PR is merged into main.
+# No test matrix or VSIX rebuild occurs on merge: reuse the exact PR artifact.
+# Manual dispatch remains available for selective registry recovery.
+name: publish
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       ci_run_id:
-        description: Successful PR CI run ID containing validated-vsix
+        description: Successful pull_request CI run containing validated-vsix
         required: true
         type: string
       pr_head_sha:
-        description: Exact reviewed PR head SHA
+        description: Exact PR head SHA, whose tree matches main
         required: true
         type: string
       registry:
-        description: Destination (never automatic)
+        description: Registry to publish (both is the automatic default)
         required: true
         type: choice
-        options: [marketplace, open-vsx]
+        options: [both, marketplace, open-vsx]
+        default: both
 permissions:
   contents: read
-  actions: read
+concurrency:
+  group: theme-publish-main
+  cancel-in-progress: false
 jobs:
   provenance:
+    name: Authorize version change and immutable PR artifact
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
     outputs:
-      registry: ${{ inputs.registry }}
+      publish: ${{ steps.gate.outputs.publish }}
+      version: ${{ steps.gate.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Require reviewed PR tree and successful PR CI
+          persist-credentials: false
+      - name: Resolve merged PR, successful CI and exact VSIX
+        id: gate
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ inputs.ci_run_id }}
-          HEAD_SHA: ${{ inputs.pr_head_sha }}
-        shell: bash
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          INPUT_RUN_ID: ${{ inputs.ci_run_id }}
+          INPUT_HEAD_SHA: ${{ inputs.pr_head_sha }}
         run: |
           set -euo pipefail
-          [[ "${GITHUB_REF}" == "refs/heads/main" ]] || exit 1
-          [[ "$HEAD_SHA" =~ ^[a-fA-F0-9]{40}$ ]] || exit 1
-          gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}" > run.json
-          python3 - <<'PY'
-          import json,os
-          run=json.load(open("run.json"))
-          assert run["event"]=="pull_request" and run["conclusion"]=="success"
-          assert run["head_sha"]==os.environ["HEAD_SHA"]
-          PY
-          git fetch --no-tags origin "$HEAD_SHA"
-          [[ "$(git rev-parse HEAD^{tree})" == "$(git rev-parse FETCH_HEAD^{tree})" ]] || { echo "Reviewed tree differs from merged tree"; exit 1; }
-          gh run download "$RUN_ID" -n validated-vsix -D dist
+          [[ "$GITHUB_REF" == "refs/heads/main" ]] || { echo "::error::Release must run from main"; exit 1; }
+          version=$(node -p "require('./package.json').version")
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::Invalid package version"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          if [[ "$EVENT" == "push" ]]; then
+            # A push to main without a version bump is intentionally a no-op.
+            previous=$(git show "$BEFORE:package.json" 2>/dev/null |
+              node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).version" 2>/dev/null || true)
+            if [[ "$version" == "$previous" ]]; then
+              echo "No version change ($version); no publishing." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" > merged-prs.json
+            head_sha=$(jq -r --arg sha "$GITHUB_SHA" \
+              '[.[] | select(.merged_at != null and .merge_commit_sha == $sha and .base.ref == "main")] | first | .head.sha // empty' merged-prs.json)
+            [[ -n "$head_sha" ]] || { echo "::error::Main commit is not a reviewed PR merge"; exit 1; }
+
+            gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?event=pull_request&head_sha=$head_sha&per_page=100" > ci-runs.json
+            run_id=$(jq -r --arg sha "$head_sha" \
+              '[.workflow_runs[] | select(.event == "pull_request" and .conclusion == "success" and .head_sha == $sha)] | sort_by(.created_at) | last | .id // empty' ci-runs.json)
+            [[ -n "$run_id" ]] || { echo "::error::No successful CI for the exact PR head"; exit 1; }
+          else
+            head_sha="$INPUT_HEAD_SHA"
+            run_id="$INPUT_RUN_ID"
+          fi
+
+          [[ "$head_sha" =~ ^[a-fA-F0-9]{40}$ ]] || { echo "::error::Invalid PR head SHA"; exit 1; }
+          [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "::error::Invalid CI run ID"; exit 1; }
+          pr_tree=$(gh api "repos/$GITHUB_REPOSITORY/commits/$head_sha" --jq .commit.tree.sha)
+          main_tree=$(git rev-parse 'HEAD^{tree}')
+          [[ "$pr_tree" == "$main_tree" ]] || { echo "::error::Merged tree differs from verified PR tree"; exit 1; }
+
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml" > workflow.json
+          expected_workflow=$(jq -r .id workflow.json)
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > run.json
+          jq -e --arg sha "$head_sha" --argjson workflow "$expected_workflow" \
+            '.event == "pull_request" and .conclusion == "success" and .head_sha == $sha and .workflow_id == $workflow' \
+            run.json >/dev/null || { echo "::error::Wrong CI workflow, SHA or conclusion"; exit 1; }
+
+          mkdir -p dist
+          gh run download "$run_id" -n validated-vsix -D dist
           (cd dist && sha256sum -c *.sha256)
+          VSIX="dist/armotusitio-theme-$version.vsix" python3 - <<'PY'
+          import json, os, pathlib, zipfile
+          path = pathlib.Path(os.environ["VSIX"])
+          assert path.is_file(), f"Missing PR-validated package: {path}"
+          with zipfile.ZipFile(path) as archive:
+              manifest = json.loads(archive.read("extension/package.json"))
+          assert manifest["version"] == path.stem.removeprefix("armotusitio-theme-")
+          assert manifest["publisher"] == "armotusitio"
+          assert manifest["name"] == "armotusitio-theme"
+          PY
+          echo "publish=true" >> "$GITHUB_OUTPUT"
+          echo "CI run $run_id, PR head $head_sha, matching tree $main_tree; publishing $version without rebuilding or repeating tests." >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
+        if: steps.gate.outputs.publish == 'true'
         with:
           name: approved-vsix-for-publish
-          path: dist/*.vsix
-          retention-days: 1
+          path: |
+            dist/*.vsix
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 90
+
   marketplace:
-    if: inputs.registry == 'marketplace'
+    name: Publish Visual Studio Marketplace (OIDC)
     needs: provenance
+    if: needs.provenance.outputs.publish == 'true' && (github.event_name == 'push' || inputs.registry == 'both' || inputs.registry == 'marketplace')
     runs-on: ubuntu-latest
     environment: marketplace
     permissions:
@@ -69,10 +135,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: npx --yes @vscode/vsce@4.1.0 publish --oidc --packagePath dist/armotusitio-theme-0.1.0.vsix
+      - name: Publish previously verified bytes, skip duplicate
+        shell: bash
+        env:
+          VERSION: ${{ needs.provenance.outputs.version }}
+        run: |
+          set -euo pipefail
+          (cd dist && sha256sum -c *.sha256)
+          npx --yes @vscode/vsce@4.1.0 publish --oidc \
+            --packagePath "dist/armotusitio-theme-$VERSION.vsix" --skip-duplicate
+
   open-vsx:
-    if: inputs.registry == 'open-vsx'
+    name: Publish Open VSX (OIDC)
     needs: provenance
+    if: needs.provenance.outputs.publish == 'true' && (github.event_name == 'push' || inputs.registry == 'both' || inputs.registry == 'open-vsx')
     runs-on: ubuntu-latest
     environment: open-vsx
     permissions:
@@ -86,4 +162,49 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: npx --yes ovsx@1.1.1 publish dist/armotusitio-theme-0.1.0.vsix --trusted-publishing
+      - name: Publish previously verified bytes (idempotent)
+        shell: bash
+        env:
+          VERSION: ${{ needs.provenance.outputs.version }}
+        run: |
+          set -euo pipefail
+          (cd dist && sha256sum -c *.sha256)
+          status=$(curl -sS -o /dev/null -w '%{http_code}' \
+            "https://open-vsx.org/api/armotusitio/armotusitio-theme/$VERSION")
+          if [[ "$status" == "200" ]]; then
+            echo "Open VSX $VERSION already published; no duplicate upload."
+            exit 0
+          fi
+          [[ "$status" == "404" ]] || { echo "::error::Open VSX version lookup failed: HTTP $status"; exit 1; }
+          npx --yes ovsx@1.1.1 publish "dist/armotusitio-theme-$VERSION.vsix" --trusted-publishing
+
+  release:
+    name: GitHub release after successful Marketplace publication
+    needs: [provenance, marketplace]
+    if: needs.provenance.outputs.publish == 'true' && (github.event_name == 'push' || inputs.registry == 'both' || inputs.registry == 'marketplace')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: approved-vsix-for-publish
+          path: dist
+      - name: Attach original VSIX and SHA-256 without rebuilding
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.provenance.outputs.version }}
+        run: |
+          set -euo pipefail
+          (cd dist && sha256sum -c *.sha256)
+          tag="v$VERSION"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; not overwriting immutable assets."
+            exit 0
+          fi
+          gh release create "$tag" \
+            "dist/armotusitio-theme-$VERSION.vsix" \
+            "dist/armotusitio-theme-$VERSION.vsix.sha256" \
+            --target "$GITHUB_SHA" --title "ArmoTuSitio Theme $VERSION" --generate-notes
