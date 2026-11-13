@@ -1,10 +1,10 @@
 # ArmoTuSitio Theme · Preview 0.1.0
 
-![Official ATS glyph](assets/ats-glyph.svg)
+[Original official ATS glyph](assets/ats-glyph.svg)
 
 Four original color themes for VS Code, ArmoTuSitio IDE and compatible editors. Declarative only: **zero runtime dependencies, zero telemetry, zero activation overhead**.
 
-![Theme moodboard (design study, not an editor screenshot)](docs/moodboard.svg)
+[Moodboard — design study, not an editor screenshot](docs/moodboard.svg)
 
 ## Choose a theme / Elegí tu tema
 Open **Preferences → Color Theme** (`Ctrl+K Ctrl+T`) and select **ArmoTuSitio Dark Premium**, **ArmoTuSitio Light**, **ArmoTuSitio High Contrast Dark** or **ArmoTuSitio High Contrast Light**.

@@ -8,6 +8,7 @@ with zipfile.ZipFile(path) as z:
     assert pkg["name"]=="armotusitio-theme" and pkg["preview"] is True
     assert len(pkg["contributes"]["themes"])==4
     assert "extension/assets/ats-glyph.svg" in names
+    assert "extension/assets/ats-glyph.png" in names
     for t in pkg["contributes"]["themes"]:
         assert "extension/"+t["path"].removeprefix("./") in names
     assert not any("/node_modules/" in item for item in names)

@@ -6,7 +6,7 @@
   "preview": true,
   "publisher": "armotusitio",
   "license": "MIT",
-  "icon": "assets/ats-glyph.svg",
+  "icon": "assets/ats-glyph.png",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -57,5 +57,9 @@
     "build": "node scripts/generate.mjs",
     "check": "node scripts/generate.mjs --check && node --test tests/*.test.mjs",
     "package": "npx --yes @vscode/vsce@4.0.2 package --no-dependencies --out dist/armotusitio-theme-0.1.0.vsix"
+  },
+  "galleryBanner": {
+    "color": "#141B22",
+    "theme": "dark"
   }
 }
