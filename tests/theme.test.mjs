@@ -20,3 +20,20 @@ for(const entry of pkg.contributes.themes){
  for(const tok of t.tokenColors){assert.ok(tok.settings.foreground);const c=contrast(tok.settings.foreground,t.colors["editor.background"]);assert.ok(c>=4.5,entry.label+" "+tok.name+" syntax contrast "+c.toFixed(2));}
  });
 }
+
+// Only the delivery policy changed for 0.1.1; keep a focused regression gate.
+test("release uses a validated PR artifact for version-bump auto-publishing", () => {
+  const publish=readFileSync(new URL("../.github/workflows/publish.yml",import.meta.url),"utf8");
+  const ci=readFileSync(new URL("../.github/workflows/ci.yml",import.meta.url),"utf8");
+  assert.match(pkg.scripts.package,new RegExp("armotusitio-theme-"+pkg.version.replaceAll(".","\\.")+"\\.vsix"));
+  assert.match(ci,new RegExp("armotusitio-theme-"+pkg.version.replaceAll(".","\\.")+"\\.vsix"));
+  assert.match(publish,/push:\s*\n\s*branches:\s*\[main\]/);
+  assert.match(publish,/gh run download/);
+  assert.match(publish,/sha256sum -c/);
+  assert.match(publish,/pull_request/);
+  assert.match(publish,/head_sha/);
+  assert.match(publish,/main_tree/);
+  assert.match(publish,/--oidc/);
+  assert.match(publish,/--trusted-publishing/);
+  assert.doesNotMatch(publish,/npm run check|node --test/);
+});

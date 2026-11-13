@@ -3,7 +3,7 @@
 **Four original color themes for VS Code, ArmoTuSitio IDE, and compatible editors.**
 
 [![Preview CI](https://github.com/Drako01/theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Drako01/theme/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.1.0%20Preview-F9ED32?labelColor=141B22)
+![Version](https://img.shields.io/badge/version-0.1.1%20Preview-F9ED32?labelColor=141B22)
 ![MIT](https://img.shields.io/badge/license-MIT-2C3E50)
 ![Declarative](https://img.shields.io/badge/runtime-declarative%20only-2C3E50)
 
@@ -11,7 +11,7 @@
 
 [Español](#español) · [English](#english) · [CI y documentación](#quality--governance)
 
-> **Preview 0.1.0.** Installation via the verified VSIX artifact is available. **Not yet published** to Visual Studio Marketplace, Open VSX, or GitHub Releases. Publication requires the repository owner's explicit authorization.
+> **Preview 0.1.1.** The packaging is ready for automated publishing when the version-bump PR merges to `main` after green CI. The previous 0.1.0 is available on Open VSX. Screenshots and manual accessibility acceptance are still pending.
 
 ---
 
@@ -62,26 +62,26 @@ La paleta proviene de `tailwind.config.ts`, `app/globals.css` y los SVG oficiale
 **Requisito mínimo:** VS Code **1.90+** (`engines.vscode: ^1.90.0`). ArmoTuSitio IDE y otros forks deben soportar las mismas APIs declarativas; el funcionamiento final requiere una instalación real.
 
 1. Abrí [GitHub Actions → Preview CI](https://github.com/Drako01/theme/actions/workflows/ci.yml).
-2. Elegí una ejecución **exitosa** de la rama `feat/preview-0.1.0-engineering`.
+2. Elegí una ejecución **exitosa** del PR de la versión que quieras instalar.
 3. Descargá el artifact **`validated-vsix`** (requiere sesión de GitHub cuando corresponda).
-4. Extraé `armotusitio-theme-0.1.0.vsix` del ZIP.
+4. Extraé `armotusitio-theme-0.1.1.vsix` del ZIP.
 5. En el editor: **Extensions → … → Install from VSIX…** y seleccioná el archivo.
 
 Alternativa por terminal para VS Code:
 
 ```bash
-code --install-extension armotusitio-theme-0.1.0.vsix
+code --install-extension armotusitio-theme-0.1.1.vsix
 ```
 
 En ArmoTuSitio IDE, utilizá el comando específico de su distribución si difiere de `code`.
 
-**Integridad:** el artifact también incluye `armotusitio-theme-0.1.0.vsix.sha256` para verificar que los bytes instalados son los aprobados por CI.
+**Integridad:** el artifact también incluye `armotusitio-theme-0.1.1.vsix.sha256` para verificar que los bytes instalados son los aprobados por CI.
 
 ```bash
-sha256sum -c armotusitio-theme-0.1.0.vsix.sha256
+sha256sum -c armotusitio-theme-0.1.1.vsix.sha256
 ```
 
-En Windows PowerShell: `Get-FileHash .\armotusitio-theme-0.1.0.vsix -Algorithm SHA256`, y compará el digest con el `.sha256` incluido.
+En Windows PowerShell: `Get-FileHash .\armotusitio-theme-0.1.1.vsix -Algorithm SHA256`, y compará el digest con el `.sha256` incluido.
 
 ### Selección y personalización voluntaria
 
@@ -128,7 +128,7 @@ No solicita permisos adicionales, no ejecuta código durante la activación, no 
 | Se ve diferente al IDE original | Dark Premium es deliberadamente distinto de ArmoTuSitio Dark (tema nativo) |
 | El artifact no está disponible | GitHub puede exigir login y aplica retención temporal a artifacts |
 | SHA-256 no coincide | No instales ese archivo; obtené nuevamente el artifact desde CI |
-| No aparece en Marketplace | El producto está en Preview y **todavía no se publicó** |
+| La versión aún no aparece en Marketplace | Confirmá que el PR de esa versión se haya mergeado y revisá [publish.yml](https://github.com/Drako01/theme/actions/workflows/publish.yml) |
 
 ---
 
@@ -154,7 +154,7 @@ ArmoTuSitio Theme brings the existing [ArmoTuSitio](https://armotusitio.com.ar/)
 ### Install the validated preview
 
 1. Visit the [successful Preview CI runs](https://github.com/Drako01/theme/actions/workflows/ci.yml).
-2. Download the **`validated-vsix`** artifact, extract `armotusitio-theme-0.1.0.vsix`.
+2. Download the **`validated-vsix`** artifact, extract `armotusitio-theme-0.1.1.vsix`.
 3. In VS Code 1.90+ open **Extensions → … → Install from VSIX…**.
 4. Open **Preferences: Color Theme** and select the desired variant.
 
@@ -177,12 +177,12 @@ Node.js 24 is used by the repository's GitHub Actions.
 ```bash
 git clone https://github.com/Drako01/theme.git
 cd theme
-git switch feat/preview-0.1.0-engineering
+git switch main
 
 npm run check             # generated-file parity, manifest and contrast tests
 npm run build             # regenerate themes ONLY after palette/generator changes
 npm run package           # build the VSIX without runtime dependencies
-python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.0.vsix
+python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.1.vsix
 ```
 
 | Location | Purpose |
@@ -202,9 +202,9 @@ python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.0.vsix
 
 ### Release policy
 
-Pull requests must pass tri-OS tests and package the VSIX once. The publishing workflow is **manual-only** (`workflow_dispatch`), checks provenance against the reviewed PR SHA/tree, verifies the artifact checksum, and targets GitHub environments `marketplace` and `open-vsx` with OIDC. No PR merge, GitHub release, or registry publication is implied by passing CI.
+Pull requests must pass tri-OS tests and package the VSIX once. The publishing workflow runs **automatically after a version-bumping PR merge to `main`**, confirms the exact reviewed PR SHA/tree and green CI, downloads its original checksummed VSIX and publishes to Marketplace and Open VSX through protected OIDC environments. It does **not** rerun tests or rebuild the artifact on merge. Manual dispatch remains for recovery.
 
-**Current status:** Preview, pending real screenshots, manual installation tests, required protected repository rules, trusted publisher registration and **explicit owner authorization**.
+**Current status:** Preview; 0.1.0 exists on Open VSX and Trusted Publishers are registered. 0.1.1 will publish after its green PR merges. Genuine screenshots, editor acceptance and accessibility checks remain pending.
 
 ### Licensing, support and credits
 
