@@ -2,6 +2,15 @@
 
 Changes to ArmoTuSitio Theme are documented here.
 
+## [0.2.0] — Stable release and higher-contrast Light
+
+- First non-preview release: `preview` is now `false` in the manifest and the VSIX verifier; CI is no longer named "Preview CI".
+- Light: text `#141B22`, secondary text and comments `#3A4C5E`, and all syntax colors reach ≥ 7:1 on the `#F1F2EE` editor (previously ≥ 4.5:1).
+- Light: UI borders `#74889A` reach ≥ 3:1 against editor, sidebar and title bar; indent guides, whitespace and line outline keep a subtle `#B8C6D1` via a new optional `subtle` palette key.
+- Light: darker ochre accent `#5E5300` (buttons, badges, Status Bar) gives ≥ 7:1 with white text; stronger selection `#BFD3DF`.
+- Dark Premium, High Contrast Dark and High Contrast Light are unchanged (generated files verified identical).
+- New tests: Light AAA text/syntax/buttons, border contrast, and dark-theme regression guard.
+
 ## [0.1.3] — Brand-yellow icons and comfortable light themes
 
 - Dark Premium: Activity Bar active/inactive icon colors and Status Bar text use official `#F9ED32`; the full-width bar stays graphite `#202C37`.

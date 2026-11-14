@@ -7,9 +7,9 @@
 - Tipografía: el wordmark SVG declara `Inter, ui-sans-serif`, fuente de interfaz adaptable al editor y SO, sin empaquetar fuentes.
 ## Reglas
 1. Usar el SVG oficial sin modificar los trazos, forma ni gradiente.
-2. Dark Premium es la experiencia principal; Light y HC no invierten el amarillo automáticamente (se sustituye por ocre legible sobre blanco).
+2. Dark Premium es la experiencia principal; Light y HC no invierten el amarillo automáticamente (se sustituye por ocre oscuro legible sobre superficies claras).
 3. El amarillo se reserva para estado activo/foco, nunca para párrafos prolongados.
-4. El contraste de texto primario es >=4.5:1 y >=7:1 para primario de temas HC (tests automáticos).
+4. El contraste de texto primario es >=4.5:1 y >=7:1 para primario de temas HC y, desde 0.2.0, del tema Light (tests automáticos).
 5. No alterar `settings.json`, otras extensiones ni el tema activo del usuario.
 ## Licencias
 Código MIT. La marca/isotipo oficial sigue siendo propiedad de ArmoTuSitio; no se ceden derechos de marca. Las paletas y reglas de sintaxis se implementaron desde cero, sin copiar temas de terceros.
@@ -26,3 +26,9 @@ Material Theme, One Dark Pro: equilibrio visual, semántica consistente, superfi
 - Dark Premium: dark `#202C37` Status Bar background is preserved; only native Activity Bar icon foregrounds and Status Bar text foregrounds use brand yellow `#F9ED32`.
 - Light: avoid large full-white areas with `#F1F2EE` editor on coordinated neutral `#E9EBE8` chrome. High Contrast Light uses off-white `#F2F3EF` and preserves `>=7:1` primary contrast.
 - High Contrast Dark and Dark Premium syntax/editor/sidebars are unchanged. Do not claim custom SVG icon colours or IDE-owned UI elements are controlled by theme tokens.
+
+## Light contrast (0.2.0)
+- Light keeps the `#F1F2EE` editor and neutral chrome; text becomes `#141B22`, secondary text/comments `#3A4C5E`, and every syntax color reaches `>=7:1` on the editor.
+- Borders use `#74889A` (`>=3:1` on editor, sidebar and title bar). Decorative lines (indent guides, whitespace, line outline) use the lighter `#B8C6D1` through the optional `subtle` palette key.
+- The ochre accent darkens to `#5E5300` so buttons, badges and the Status Bar reach `>=7:1` with white text.
+- Dark Premium and High Contrast Dark are not modified; High Contrast Light already met `>=7:1` and keeps its palette.

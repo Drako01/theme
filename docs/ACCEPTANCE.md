@@ -1,9 +1,10 @@
-# Acceptance checklist — ArmoTuSitio Theme 0.1.3 Preview
+# Acceptance checklist — ArmoTuSitio Theme 0.2.0
 
 ## Confirmed in repository
 - [x] Four standalone, declarative color themes (Dark Premium, Light, HC Dark, HC Light)
 - [x] Verified corporate colors and unchanged official glyph (SVG + PNG packaging asset)
 - [x] Dark Premium graphite status background retained with yellow Activity Bar icons / Status Bar text; Light and HC Light low-glare surfaces; HC Dark unchanged
+- [x] Light: text, comments, syntax and buttons ≥ 7:1; UI borders ≥ 3:1 (automated tests); dark themes unchanged
 - [x] TextMate and semantic tokens; debug, Git, syntax and terminal surfaces
 - [x] Shared UI tokens for current ArmoTuSitio IDE Chat / Control Center / Accounts views
 - [x] No activationEvents, main entrypoint, runtime dependencies or telemetry
@@ -27,7 +28,7 @@
 - [ ] Configure main ruleset / PR required / squash-only / linear history in repository settings
 - [x] Marketplace and Open VSX Trusted Publisher registrations shown by owner for publish.yml (environment names marketplace / open-vsx)
 - [ ] Confirm GitHub environment authorization in first real publish run
-- [ ] Merge the validated 0.1.3 PR to authorize automatic registry publication
+- [ ] Merge the validated 0.2.0 PR to authorize automatic registry publication
 
 ## Release restrictions
-Preview only: `preview: true`. A green, version-bumping PR merge authorizes automatic publishing; do not publish before merge. Do not describe simulated moodboard as a functional screenshot. Do not claim real runtime installation or manual accessibility verification until independently checked.
+Stable release: `preview: false` (no Preview badge in the registries). A green, version-bumping PR merge authorizes automatic publishing; do not publish before merge. Do not describe simulated moodboard as a functional screenshot. Do not claim real runtime installation or manual accessibility verification until independently checked.

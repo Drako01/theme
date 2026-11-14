@@ -3,7 +3,7 @@ const root=new URL("../",import.meta.url);const pkg=JSON.parse(readFileSync(new 
 function rgb(hex){return [1,3,5].map(i=>{const v=parseInt(hex.slice(i,i+2),16)/255;return v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4;});}
 function luminance(hex){const [r,g,b]=rgb(hex);return 0.2126*r+0.7152*g+0.0722*b;}
 function contrast(a,b){const x=luminance(a),y=luminance(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);}
-test("manifest: four non-activating selectable themes",()=>{assert.equal(pkg.preview,true);assert.equal(pkg.publisher,"armotusitio");assert.equal(pkg.main,undefined);assert.equal(pkg.activationEvents,undefined);assert.equal(pkg.contributes.themes.length,4);});
+test("manifest: four non-activating selectable themes",()=>{assert.equal(pkg.preview,false);assert.equal(pkg.publisher,"armotusitio");assert.equal(pkg.main,undefined);assert.equal(pkg.activationEvents,undefined);assert.equal(pkg.contributes.themes.length,4);});
 for(const entry of pkg.contributes.themes){
  test("theme "+entry.label,()=>{
  const t=JSON.parse(readFileSync(new URL("../"+entry.path,import.meta.url)));
@@ -59,7 +59,7 @@ test("Dark Premium status bar reduces glare and keeps 3 other variants",()=>{
  assert.equal(dark["statusBarItem.hoverBackground"],"#374B59");
  assert.equal(dark["statusBarItem.prominentForeground"],"#F9ED32");
  assert.equal(colors("highDark")["statusBar.background"],"#F9ED32");
- assert.equal(colors("light")["statusBar.background"],"#756700");
+ assert.equal(colors("light")["statusBar.background"],"#5E5300");
  assert.equal(colors("highLight")["statusBar.background"],"#5B4C00");
 });
 
@@ -90,4 +90,22 @@ test("v0.1.3 light themes soften bright-white surfaces while preserving WCAG-sty
   for(const fg of [c["editor.foreground"],c["descriptionForeground"],c["textLink.foreground"]])assert.ok(contrast(fg,editor)>=minimum,id+" contrast "+fg);
   for(const tok of t.tokenColors)assert.ok(contrast(tok.settings.foreground,editor)>=4.5,id+" syntax "+tok.name);
  }
+});
+
+test("v0.2.0 Light reaches AAA text/syntax contrast and visible UI boundaries",()=>{
+ const c=JSON.parse(readFileSync(new URL("../themes/light-color-theme.json",import.meta.url)));
+ const k=c.colors,editor=k["editor.background"];
+ for(const key of ["editor.foreground","descriptionForeground","editorLineNumber.foreground","tab.inactiveForeground"])assert.ok(contrast(k[key],key==="tab.inactiveForeground"?k["tab.inactiveBackground"]:editor)>=7,key);
+ for(const tok of c.tokenColors)assert.ok(contrast(tok.settings.foreground,editor)>=7,"syntax "+tok.name);
+ for(const [fg,bg] of [["button.foreground","button.background"],["statusBar.foreground","statusBar.background"],["statusBar.debuggingForeground","statusBar.debuggingBackground"],["badge.foreground","badge.background"]])assert.ok(contrast(k[fg],k[bg])>=7,fg+" / "+bg);
+ for(const bg of ["editor.background","sideBar.background","titleBar.activeBackground"])assert.ok(contrast(k["editorGroup.border"],k[bg])>=3,"border / "+bg);
+ assert.ok(contrast(k["list.activeSelectionForeground"],k["list.activeSelectionBackground"])>=7);
+});
+
+test("v0.2.0 leaves dark themes untouched",()=>{
+ const colors=id=>JSON.parse(readFileSync(new URL("../themes/"+id+"-color-theme.json",import.meta.url))).colors;
+ assert.equal(colors("dark")["editorIndentGuide.background1"],"#354655");
+ assert.equal(colors("highDark")["editorIndentGuide.background1"],"#FFFFFF");
+ assert.equal(colors("dark")["editor.background"],"#101820");
+ assert.equal(colors("highDark")["editor.background"],"#000000");
 });
