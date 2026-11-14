@@ -15,4 +15,4 @@ A `main` push without a version change does not publish. No publish job runs fro
 
 **Owner prerequisites:** preserve the protected `main` PR rules, ensure GitHub environments are named exactly `marketplace` and `open-vsx`, and maintain Trusted Publisher registrations for repository `Drako01/theme` and workflow `publish.yml`.
 
-**Operational rule:** verify CI green before merge. Squash-merging the `0.1.1` PR is the authorization event for automatic publication. CI does not rerun on merge. The visual design, glyph and four declarative theme definitions are unchanged.
+**Operational rule:** verify CI green before merge. Squash-merging the version-bumping PR (currently `0.2.0`, the first release with `preview: false`) is the authorization event for automatic publication. CI does not rerun on merge. The `verify-vsix.py` gate requires `preview` to be `false`, so a package that still declares preview is rejected.

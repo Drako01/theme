@@ -2,8 +2,8 @@
 
 **Four original color themes for VS Code, ArmoTuSitio IDE, and compatible editors.**
 
-[![Preview CI](https://github.com/Drako01/theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Drako01/theme/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.1.3%20Preview-F9ED32?labelColor=141B22)
+[![CI](https://github.com/Drako01/theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Drako01/theme/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-0.2.0-F9ED32?labelColor=141B22)
 ![MIT](https://img.shields.io/badge/license-MIT-2C3E50)
 ![Declarative](https://img.shields.io/badge/runtime-declarative%20only-2C3E50)
 
@@ -11,7 +11,7 @@
 
 [Español](#español) · [English](#english) · [CI y documentación](#quality--governance)
 
-> **Preview 0.1.3.** Dark Premium retains its graphite status bar while native Activity Bar icons and Status Bar text use original brand yellow. Light and High Contrast Light use softer off-white surfaces to reduce glare while maintaining measured foreground contrast. No CSS gradient injection. Manual editor accessibility acceptance is pending.
+> **Versión 0.2.0 (estable).** ArmoTuSitio Light mejora sus contrastes: texto, comentarios y sintaxis alcanzan ≥ 7:1 (AAA) sobre el editor, los bordes de la interfaz superan 3:1 y los acentos ocre son más oscuros. Los temas Dark Premium y High Contrast Dark no cambian. Sin inyección de CSS. La aceptación manual de accesibilidad en el editor real sigue pendiente.
 
 ---
 
@@ -33,7 +33,7 @@
 | Tema | Tipo de VS Code | Experiencia |
 | --- | --- | --- |
 | **ArmoTuSitio Dark Premium** | `vs-dark` | Midnight, amarillo institucional, baja distracción para trabajo prolongado |
-| **ArmoTuSitio Light** | `vs` | Superficies claras, ocre de alto contraste, ambientes luminosos |
+| **ArmoTuSitio Light** | `vs` | Superficies claras de bajo deslumbramiento, texto y sintaxis ≥ 7:1, bordes ≥ 3:1, ocre oscuro, ambientes luminosos |
 | **ArmoTuSitio High Contrast Dark** | `hc-black` | Contraste reforzado sobre fondo negro, delimitadores destacados |
 | **ArmoTuSitio High Contrast Light** | `hc-light` | Blanco y negro de contraste reforzado con acento ocre |
 
@@ -51,37 +51,41 @@
 | Yellow Gradient | `#D7C800` | Segunda parada del gradiente del isotipo |
 | Slate | `#3A4756` | Trazo secundario del isotipo |
 | Premium Editor | `#101820` | Superficie derivada de la identidad, no un token del sitio |
-| Light Editor | `#FFFFFF` | Superficie adaptada a la variante clara |
+| Light Editor | `#F1F2EE` | Superficie off-white adaptada a la variante clara |
 
 La paleta proviene de `tailwind.config.ts`, `app/globals.css` y los SVG oficiales del proyecto ArmoTuSitio. El logo se reutiliza sin modificar los trazos ni la geometría.
 
 **Compatibilidad con el IDE:** el repositorio [Drako01/armotusitio-ide](https://github.com/Drako01/armotusitio-ide) ya incluye los temas nativos **ArmoTuSitio Dark** y **ArmoTuSitio Light**; esta extensión ofrece **variantes adicionales**, no los reemplaza ni modifica el tema predeterminado del IDE. Los nuevos temas aportan colores para los tokens empleados por Control Center, Chat Harness y Account Manager: `--vscode-button-secondaryHoverBackground`, `--vscode-toolbar-hoverBackground`, `--vscode-testing-iconPassed`, `--vscode-textCodeBlock-background` y estados de validación.
 
-### Instalación desde el VSIX validado
+### Instalación
 
 **Requisito mínimo:** VS Code **1.90+** (`engines.vscode: ^1.90.0`). ArmoTuSitio IDE y otros forks deben soportar las mismas APIs declarativas; el funcionamiento final requiere una instalación real.
 
-1. Abrí [GitHub Actions → Preview CI](https://github.com/Drako01/theme/actions/workflows/ci.yml).
+**Desde un registro:** buscá `ArmoTuSitio Theme` (publisher `armotusitio`) en Extensions de VS Code (Marketplace) o de editores compatibles con Open VSX.
+
+**Desde el VSIX validado** (también disponible en la página de [GitHub Releases](https://github.com/Drako01/theme/releases)):
+
+1. Abrí [GitHub Actions → CI](https://github.com/Drako01/theme/actions/workflows/ci.yml).
 2. Elegí una ejecución **exitosa** del PR de la versión que quieras instalar.
 3. Descargá el artifact **`validated-vsix`** (requiere sesión de GitHub cuando corresponda).
-4. Extraé `armotusitio-theme-0.1.3.vsix` del ZIP.
+4. Extraé `armotusitio-theme-0.2.0.vsix` del ZIP.
 5. En el editor: **Extensions → … → Install from VSIX…** y seleccioná el archivo.
 
 Alternativa por terminal para VS Code:
 
 ```bash
-code --install-extension armotusitio-theme-0.1.3.vsix
+code --install-extension armotusitio-theme-0.2.0.vsix
 ```
 
 En ArmoTuSitio IDE, utilizá el comando específico de su distribución si difiere de `code`.
 
-**Integridad:** el artifact también incluye `armotusitio-theme-0.1.3.vsix.sha256` para verificar que los bytes instalados son los aprobados por CI.
+**Integridad:** el artifact también incluye `armotusitio-theme-0.2.0.vsix.sha256` para verificar que los bytes instalados son los aprobados por CI.
 
 ```bash
-sha256sum -c armotusitio-theme-0.1.3.vsix.sha256
+sha256sum -c armotusitio-theme-0.2.0.vsix.sha256
 ```
 
-En Windows PowerShell: `Get-FileHash .\armotusitio-theme-0.1.3.vsix -Algorithm SHA256`, y compará el digest con el `.sha256` incluido.
+En Windows PowerShell: `Get-FileHash .\armotusitio-theme-0.2.0.vsix -Algorithm SHA256`, y compará el digest con el `.sha256` incluido.
 
 ### Selección y personalización voluntaria
 
@@ -112,7 +116,7 @@ Las reglas genéricas de TextMate y Semantic Highlighting se aplican cuando el e
 
 ### Accesibilidad, QA y seguridad
 
-Los tests verifican: contraste mínimo **4,5:1** en pares de texto de la UI y scopes de sintaxis; **7:1** en pares principales de las variantes HC; integridad del manifiesto, existencia de los cuatro temas, resaltado semántico y presencia de tokens usados por la interfaz del IDE.
+Los tests verifican: contraste mínimo **4,5:1** en pares de texto de la UI y scopes de sintaxis; **7:1** en pares principales de las variantes HC y, desde 0.2.0, también en texto, comentarios, sintaxis y botones del tema **Light**, con bordes de interfaz ≥ **3:1**; integridad del manifiesto, existencia de los cuatro temas, resaltado semántico y presencia de tokens usados por la interfaz del IDE.
 
 Estas pruebas **no equivalen a certificación WCAG integral**. Continúan pendientes la revisión manual en el host real, lectores de pantalla, perfiles de daltonismo y capturas de todas las variantes. Errores, warnings, breakpoints, Git y diff tienen colores específicos.
 
@@ -145,16 +149,18 @@ ArmoTuSitio Theme brings the existing [ArmoTuSitio](https://armotusitio.com.ar/)
 | Theme | UI type | Intended use |
 | --- | --- | --- |
 | **ArmoTuSitio Dark Premium** | `vs-dark` | Low-distraction everyday coding, midnight/yellow identity |
-| **ArmoTuSitio Light** | `vs` | Bright work environments with accessible ochre accents |
+| **ArmoTuSitio Light** | `vs` | Bright work environments: low-glare surfaces, AAA text and syntax contrast, darker ochre accents |
 | **ArmoTuSitio High Contrast Dark** | `hc-black` | Reinforced boundaries and contrast on black |
 | **ArmoTuSitio High Contrast Light** | `hc-light` | Reinforced boundaries and contrast on white |
 
 [Open the design moodboard](docs/moodboard.svg) (**concept illustration**, not an editor screenshot). Genuine Extension Development Host screenshots are pending.
 
-### Install the validated preview
+### Install
 
-1. Visit the [successful Preview CI runs](https://github.com/Drako01/theme/actions/workflows/ci.yml).
-2. Download the **`validated-vsix`** artifact, extract `armotusitio-theme-0.1.3.vsix`.
+Search for `ArmoTuSitio Theme` (publisher `armotusitio`) in the VS Code Marketplace or Open VSX, or install the validated VSIX (also attached to [GitHub Releases](https://github.com/Drako01/theme/releases)):
+
+1. Visit the [successful CI runs](https://github.com/Drako01/theme/actions/workflows/ci.yml).
+2. Download the **`validated-vsix`** artifact, extract `armotusitio-theme-0.2.0.vsix`.
 3. In VS Code 1.90+ open **Extensions → … → Install from VSIX…**.
 4. Open **Preferences: Color Theme** and select the desired variant.
 
@@ -162,7 +168,7 @@ Verify the downloaded package against the accompanying `.sha256` file. ArmoTuSit
 
 **Supported highlighting** depends on grammars or language servers provided by VS Code and installed extensions. Java, Go, JS/TS, Python, PHP, Rust, SQL, YAML, JSON and popular frameworks are covered by general scopes and semantic token mappings.
 
-**Accessibility:** CI checks selected foreground/background pairs at 4.5:1, and primary high-contrast pairs at 7:1, but full manual accessibility testing is still required. No telemetry, file access, additional permissions, or runtime code.
+**Accessibility:** CI checks selected foreground/background pairs at 4.5:1, primary high-contrast pairs at 7:1, and (since 0.2.0) Light text, syntax and buttons at 7:1 with UI borders at 3:1, but full manual accessibility testing is still required. No telemetry, file access, additional permissions, or runtime code.
 
 For issues, use [GitHub Issues](https://github.com/Drako01/theme/issues) with the editor version, OS, theme variant, language, reproduction steps, and any relevant screenshots.
 
@@ -182,7 +188,7 @@ git switch main
 npm run check             # generated-file parity, manifest and contrast tests
 npm run build             # regenerate themes ONLY after palette/generator changes
 npm run package           # build the VSIX without runtime dependencies
-python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.3.vsix
+python3 scripts/verify-vsix.py dist/armotusitio-theme-0.2.0.vsix
 ```
 
 | Location | Purpose |
@@ -198,13 +204,13 @@ python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.3.vsix
 | [Publishing workflow](docs/PUBLISHING.md) | Exact-SHA release governance |
 | [Changelog](CHANGELOG.md) | Version history |
 
-**Baseline evidence:** [successful Preview CI #43523055218](https://github.com/Drako01/theme/actions/runs/43523055218) passed on **Ubuntu, Windows, macOS and VSIX packaging**. More recent commits require their own green CI; a previous successful job does not approve modified code.
+**Baseline evidence:** [successful CI #43523055218](https://github.com/Drako01/theme/actions/runs/43523055218) passed on **Ubuntu, Windows, macOS and VSIX packaging**. More recent commits require their own green CI; a previous successful job does not approve modified code.
 
 ### Release policy
 
 Pull requests must pass tri-OS tests and package the VSIX once. The publishing workflow runs **automatically after a version-bumping PR merge to `main`**, confirms the exact reviewed PR SHA/tree and green CI, downloads its original checksummed VSIX and publishes to Marketplace and Open VSX through protected OIDC environments. It does **not** rerun tests or rebuild the artifact on merge. Manual dispatch remains for recovery.
 
-**Current status:** 0.1.2 is published via the automated release pipeline; 0.1.3 is pending successful PR CI and merge. Dark Premium editor/syntax surfaces and High Contrast Dark remain unchanged. Genuine screenshots and manual accessibility checks are pending.
+**Current status:** 0.1.3 is published via the automated release pipeline; 0.2.0 is the first non-preview release (`preview: false`) and is pending successful PR CI and merge. It improves ArmoTuSitio Light contrast only; Dark Premium and High Contrast Dark remain unchanged. Genuine screenshots and manual accessibility checks are pending.
 
 ### Licensing, support and credits
 
