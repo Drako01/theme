@@ -2,6 +2,13 @@
 
 Changes to ArmoTuSitio Theme are documented here.
 
+## [0.1.2] — Calm Dark Premium status bar
+
+- Replace full-width yellow with corporate graphite `#202C37`, text `#E5E7EB`, and a subtle warm separator `#53533A`.
+- Add restrained hover and active states for status bar items; preserve yellow for small focus and identity accents.
+- Retain the official logo and the Light / High Contrast modes unchanged; no unsupported CSS gradients or custom IDE CSS.
+- Keep the original CI-gated, OIDC automatic publication and immutable VSIX process.
+
 ## [0.1.1] — Automated OIDC release
 
 - Automatically publish a version-bumping, CI-validated merge to `main` with `publish.yml`.

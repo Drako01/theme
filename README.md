@@ -3,7 +3,7 @@
 **Four original color themes for VS Code, ArmoTuSitio IDE, and compatible editors.**
 
 [![Preview CI](https://github.com/Drako01/theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Drako01/theme/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-0.1.1%20Preview-F9ED32?labelColor=141B22)
+![Version](https://img.shields.io/badge/version-0.1.2%20Preview-F9ED32?labelColor=141B22)
 ![MIT](https://img.shields.io/badge/license-MIT-2C3E50)
 ![Declarative](https://img.shields.io/badge/runtime-declarative%20only-2C3E50)
 
@@ -11,7 +11,7 @@
 
 [Español](#español) · [English](#english) · [CI y documentación](#quality--governance)
 
-> **Preview 0.1.1.** The packaging is ready for automated publishing when the version-bump PR merges to `main` after green CI. The previous 0.1.0 is available on Open VSX. Screenshots and manual accessibility acceptance are still pending.
+> **Preview 0.1.2.** Dark Premium softens the full-width status bar to corporate midnight, reserving original yellow for small accents. This version publishes after a green PR merge to `main`. Color theme tokens do not support CSS gradients; layered solid colors give depth. Manual accessibility review remains pending.
 
 ---
 
@@ -64,24 +64,24 @@ La paleta proviene de `tailwind.config.ts`, `app/globals.css` y los SVG oficiale
 1. Abrí [GitHub Actions → Preview CI](https://github.com/Drako01/theme/actions/workflows/ci.yml).
 2. Elegí una ejecución **exitosa** del PR de la versión que quieras instalar.
 3. Descargá el artifact **`validated-vsix`** (requiere sesión de GitHub cuando corresponda).
-4. Extraé `armotusitio-theme-0.1.1.vsix` del ZIP.
+4. Extraé `armotusitio-theme-0.1.2.vsix` del ZIP.
 5. En el editor: **Extensions → … → Install from VSIX…** y seleccioná el archivo.
 
 Alternativa por terminal para VS Code:
 
 ```bash
-code --install-extension armotusitio-theme-0.1.1.vsix
+code --install-extension armotusitio-theme-0.1.2.vsix
 ```
 
 En ArmoTuSitio IDE, utilizá el comando específico de su distribución si difiere de `code`.
 
-**Integridad:** el artifact también incluye `armotusitio-theme-0.1.1.vsix.sha256` para verificar que los bytes instalados son los aprobados por CI.
+**Integridad:** el artifact también incluye `armotusitio-theme-0.1.2.vsix.sha256` para verificar que los bytes instalados son los aprobados por CI.
 
 ```bash
-sha256sum -c armotusitio-theme-0.1.1.vsix.sha256
+sha256sum -c armotusitio-theme-0.1.2.vsix.sha256
 ```
 
-En Windows PowerShell: `Get-FileHash .\armotusitio-theme-0.1.1.vsix -Algorithm SHA256`, y compará el digest con el `.sha256` incluido.
+En Windows PowerShell: `Get-FileHash .\armotusitio-theme-0.1.2.vsix -Algorithm SHA256`, y compará el digest con el `.sha256` incluido.
 
 ### Selección y personalización voluntaria
 
@@ -154,7 +154,7 @@ ArmoTuSitio Theme brings the existing [ArmoTuSitio](https://armotusitio.com.ar/)
 ### Install the validated preview
 
 1. Visit the [successful Preview CI runs](https://github.com/Drako01/theme/actions/workflows/ci.yml).
-2. Download the **`validated-vsix`** artifact, extract `armotusitio-theme-0.1.1.vsix`.
+2. Download the **`validated-vsix`** artifact, extract `armotusitio-theme-0.1.2.vsix`.
 3. In VS Code 1.90+ open **Extensions → … → Install from VSIX…**.
 4. Open **Preferences: Color Theme** and select the desired variant.
 
@@ -182,7 +182,7 @@ git switch main
 npm run check             # generated-file parity, manifest and contrast tests
 npm run build             # regenerate themes ONLY after palette/generator changes
 npm run package           # build the VSIX without runtime dependencies
-python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.1.vsix
+python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.2.vsix
 ```
 
 | Location | Purpose |
@@ -204,7 +204,7 @@ python3 scripts/verify-vsix.py dist/armotusitio-theme-0.1.1.vsix
 
 Pull requests must pass tri-OS tests and package the VSIX once. The publishing workflow runs **automatically after a version-bumping PR merge to `main`**, confirms the exact reviewed PR SHA/tree and green CI, downloads its original checksummed VSIX and publishes to Marketplace and Open VSX through protected OIDC environments. It does **not** rerun tests or rebuild the artifact on merge. Manual dispatch remains for recovery.
 
-**Current status:** Preview; 0.1.0 exists on Open VSX and Trusted Publishers are registered. 0.1.1 will publish after its green PR merges. Genuine screenshots, editor acceptance and accessibility checks remain pending.
+**Current status:** 0.1.1 was published through the CI-backed release pipeline. The 0.1.2 Dark Premium adjustment is pending PR approval. Other theme variants remain unchanged. Genuine editor screenshots and manual accessibility checks are pending.
 
 ### Licensing, support and credits
 

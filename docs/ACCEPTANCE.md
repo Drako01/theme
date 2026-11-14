@@ -1,8 +1,9 @@
-# Acceptance checklist — ArmoTuSitio Theme 0.1.1 Preview
+# Acceptance checklist — ArmoTuSitio Theme 0.1.2 Preview
 
 ## Confirmed in repository
 - [x] Four standalone, declarative color themes (Dark Premium, Light, HC Dark, HC Light)
 - [x] Verified corporate colors and unchanged official glyph (SVG + PNG packaging asset)
+- [x] Dark Premium muted status bar with a focused contrast check; Light/HC unchanged
 - [x] TextMate and semantic tokens; debug, Git, syntax and terminal surfaces
 - [x] Shared UI tokens for current ArmoTuSitio IDE Chat / Control Center / Accounts views
 - [x] No activationEvents, main entrypoint, runtime dependencies or telemetry
@@ -19,6 +20,7 @@
 ## Release blockers / acceptance pending
 - [ ] **Latest PR head**: tri-OS jobs all green and VSIX + SHA-256 artifact verified (prior CI does not cover new edits)
 - [ ] Install real VSIX in current VS Code and ArmoTuSitio IDE (both fresh and existing profile)
+- [ ] Verify status bar visually in ArmoTuSitio IDE, where custom IDE CSS may override the theme's color token
 - [ ] Capture genuine Extension Development Host screenshots for all four variants, including IDE Chat and multilingual code
 - [ ] Manual accessibility acceptance (focus/hover/selection, high contrast, long sessions, screen reader)
 - [ ] Configure main ruleset / PR required / squash-only / linear history in repository settings
