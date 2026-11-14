@@ -2,6 +2,14 @@
 
 Changes to ArmoTuSitio Theme are documented here.
 
+## [0.1.3] — Brand-yellow icons and comfortable light themes
+
+- Dark Premium: Activity Bar active/inactive icon colors and Status Bar text use official `#F9ED32`; the full-width bar stays graphite `#202C37`.
+- Editor, syntax, sidebar headings, tabs, terminal, logo and High Contrast Dark remain unchanged.
+- Light: replace the pure-white editor with low-glare off-white `#F1F2EE` and coordinated muted chrome, selections and hover states.
+- High Contrast Light: warm the near-white editor to `#F2F3EF` while retaining required high text and syntax contrast.
+- Targeted regression tests, deterministic generation and the existing verified-PR OIDC release process.
+
 ## [0.1.2] — Calm Dark Premium status bar
 
 - Replace full-width yellow with corporate graphite `#202C37`, text `#E5E7EB`, and a subtle warm separator `#53533A`.

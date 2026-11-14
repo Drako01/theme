@@ -51,14 +51,43 @@ test("Dark Premium status bar reduces glare and keeps 3 other variants",()=>{
  const colors=id=>JSON.parse(readFileSync(new URL("../themes/"+id+"-color-theme.json",import.meta.url))).colors;
  const dark=colors("dark");
  assert.equal(dark["statusBar.background"],"#202C37");
- assert.equal(dark["statusBar.foreground"],"#E5E7EB");
+ assert.equal(dark["statusBar.foreground"],"#F9ED32");
  assert.equal(dark["statusBar.border"],"#53533A");
  assert.ok(contrast(dark["statusBar.foreground"],dark["statusBar.background"])>=7);
  assert.notEqual(dark["statusBar.background"],"#F9ED32");
  assert.equal(dark["activityBar.activeBorder"],"#F9ED32");
  assert.equal(dark["statusBarItem.hoverBackground"],"#374B59");
- assert.equal(dark["statusBarItem.prominentForeground"],"#F5ECAA");
+ assert.equal(dark["statusBarItem.prominentForeground"],"#F9ED32");
  assert.equal(colors("highDark")["statusBar.background"],"#F9ED32");
  assert.equal(colors("light")["statusBar.background"],"#756700");
  assert.equal(colors("highLight")["statusBar.background"],"#5B4C00");
+});
+
+test("v0.1.3 keeps brand-yellow chrome scoped to Dark Premium Activity and Status Bars",()=>{
+ const theme=id=>JSON.parse(readFileSync(new URL("../themes/"+id+"-color-theme.json",import.meta.url)));
+ const dark=theme("dark").colors;
+ for(const key of ["activityBar.foreground","activityBar.inactiveForeground","statusBar.foreground","statusBarItem.prominentForeground","statusBarItem.remoteForeground","statusBar.noFolderForeground"]){
+   assert.equal(dark[key],"#F9ED32",key);
+ }
+ assert.equal(dark["statusBar.background"],"#202C37");
+ assert.equal(dark["statusBar.border"],"#53533A");
+ assert.ok(contrast(dark["statusBar.foreground"],dark["statusBar.background"])>=7);
+ for(const key of ["sideBar.foreground","sideBarSectionHeader.foreground","editor.foreground","tab.activeForeground"]){
+   assert.equal(dark[key],"#E5E7EB",key);
+ }
+ assert.equal(theme("highDark").colors["activityBar.foreground"],"#FFFFFF");
+});
+
+test("v0.1.3 light themes soften bright-white surfaces while preserving WCAG-style contrast",()=>{
+ for(const [id,bg,editor,side] of [
+   ["light","#E9EBE8","#F1F2EE","#E6EAE6"],
+   ["highLight","#ECEDE8","#F2F3EF","#EBEDE8"]
+ ]){
+  const t=JSON.parse(readFileSync(new URL("../themes/"+id+"-color-theme.json",import.meta.url)));
+  const c=t.colors,minimum=id==="highLight"?7:4.5;
+  for(const [key,color] of [["titleBar.activeBackground",bg],["editor.background",editor],["terminal.background",editor],["sideBar.background",side]])assert.equal(c[key],color,key);
+  assert.notEqual(editor,"#FFFFFF");
+  for(const fg of [c["editor.foreground"],c["descriptionForeground"],c["textLink.foreground"]])assert.ok(contrast(fg,editor)>=minimum,id+" contrast "+fg);
+  for(const tok of t.tokenColors)assert.ok(contrast(tok.settings.foreground,editor)>=4.5,id+" syntax "+tok.name);
+ }
 });

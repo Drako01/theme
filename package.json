@@ -2,7 +2,7 @@
   "name": "armotusitio-theme",
   "displayName": "ArmoTuSitio Theme",
   "description": "Four accessible, performance-first editor themes inspired by ArmoTuSitio's verified brand palette.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "preview": true,
   "publisher": "armotusitio",
   "license": "MIT",
@@ -56,7 +56,7 @@
   "scripts": {
     "build": "node scripts/generate.mjs",
     "check": "node scripts/generate.mjs --check && node --test tests/*.test.mjs",
-    "package": "npx --yes @vscode/vsce@4.1.0 package --no-dependencies --out dist/armotusitio-theme-0.1.2.vsix"
+    "package": "npx --yes @vscode/vsce@4.1.0 package --no-dependencies --out dist/armotusitio-theme-0.1.3.vsix"
   },
   "galleryBanner": {
     "color": "#141B22",
