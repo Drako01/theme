@@ -143,7 +143,14 @@ function makeTheme(name,p){
  "terminal.ansiBrightBlack":p.muted,"terminal.ansiBrightRed":p.error,"terminal.ansiBrightGreen":p.success,
  "terminal.ansiBrightYellow":p.warning,"terminal.ansiBrightBlue":p.info,"terminal.ansiBrightMagenta":p.keyword,
  "terminal.ansiBrightCyan":p.func,"terminal.ansiBrightWhite":p.fg,
- "statusBar.background":p.accent,"statusBar.foreground":p.accentText,"statusBar.border":p.border,
+ "statusBar.background":name==="dark"?"#202C37":p.accent,"statusBar.foreground":name==="dark"?"#E5E7EB":p.accentText,"statusBar.border":name==="dark"?"#53533A":p.border,
+ ...(name==="dark"?{
+  "statusBarItem.hoverBackground":"#374B59",
+  "statusBarItem.activeBackground":"#465B69",
+  "statusBarItem.prominentBackground":"#585432",
+  "statusBarItem.prominentForeground":"#F5ECAA",
+  "statusBarItem.prominentHoverBackground":"#68633B"
+ }:{}),
  "statusBar.debuggingBackground":p.warning,"statusBar.debuggingForeground":p.accentText,
  "statusBar.noFolderBackground":p.side,"statusBar.noFolderForeground":p.fg,
  "debugToolBar.background":p.raised,"debugIcon.breakpointForeground":p.error,

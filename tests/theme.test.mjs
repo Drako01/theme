@@ -46,3 +46,19 @@ test("Open VSX recovery checks release tag and a CLI with trusted-publishing", (
   assert.match(publish,/ovsx@1\.4\.0 publish --trusted-publishing/);
   assert.doesNotMatch(publish,/ovsx@1\.1\.1/);
 });
+
+test("Dark Premium status bar reduces glare and keeps 3 other variants",()=>{
+ const colors=id=>JSON.parse(readFileSync(new URL("../themes/"+id+"-color-theme.json",import.meta.url))).colors;
+ const dark=colors("dark");
+ assert.equal(dark["statusBar.background"],"#202C37");
+ assert.equal(dark["statusBar.foreground"],"#E5E7EB");
+ assert.equal(dark["statusBar.border"],"#53533A");
+ assert.ok(contrast(dark["statusBar.foreground"],dark["statusBar.background"])>=7);
+ assert.notEqual(dark["statusBar.background"],"#F9ED32");
+ assert.equal(dark["activityBar.activeBorder"],"#F9ED32");
+ assert.equal(dark["statusBarItem.hoverBackground"],"#374B59");
+ assert.equal(dark["statusBarItem.prominentForeground"],"#F5ECAA");
+ assert.equal(colors("highDark")["statusBar.background"],"#F9ED32");
+ assert.equal(colors("light")["statusBar.background"],"#756700");
+ assert.equal(colors("highLight")["statusBar.background"],"#5B4C00");
+});

@@ -15,3 +15,9 @@
 Código MIT. La marca/isotipo oficial sigue siendo propiedad de ArmoTuSitio; no se ceden derechos de marca. Las paletas y reglas de sintaxis se implementaron desde cero, sin copiar temas de terceros.
 ## Benchmark
 Material Theme, One Dark Pro: equilibrio visual, semántica consistente, superficies diferenciadas. Riesgos observados en temas populares: comentarios tenues, acentos saturados y pérdida de contraste en selección. Este producto los trata con pruebas explícitas.
+
+## Dark Premium comfort treatment (0.1.2)
+- Brand authority stays `#F9ED32` on `#141B22` for the official glyph and focused accents, as in `Drako01/armotusitio2.0`.
+- The website uses subtle `radial-gradient` backgrounds with low-alpha yellow/graphite; declarative VS Code color themes **cannot use CSS gradients**.
+- Dark Premium's full-width status bar becomes `#202C37` with `#E5E7EB` foreground, `#53533A` separator and low-key item hover states. This is layered color, not a fake gradient.
+- Keep original accessibility variants, glyph assets and editor runtime behavior untouched; no injected IDE shell CSS.
