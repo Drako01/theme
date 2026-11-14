@@ -21,3 +21,8 @@ Material Theme, One Dark Pro: equilibrio visual, semántica consistente, superfi
 - The website uses subtle `radial-gradient` backgrounds with low-alpha yellow/graphite; declarative VS Code color themes **cannot use CSS gradients**.
 - Dark Premium's full-width status bar becomes `#202C37` with `#E5E7EB` foreground, `#53533A` separator and low-key item hover states. This is layered color, not a fake gradient.
 - Keep original accessibility variants, glyph assets and editor runtime behavior untouched; no injected IDE shell CSS.
+
+## Small-accent yellow and low-glare light surfaces (0.1.3)
+- Dark Premium: dark `#202C37` Status Bar background is preserved; only native Activity Bar icon foregrounds and Status Bar text foregrounds use brand yellow `#F9ED32`.
+- Light: avoid large full-white areas with `#F1F2EE` editor on coordinated neutral `#E9EBE8` chrome. High Contrast Light uses off-white `#F2F3EF` and preserves `>=7:1` primary contrast.
+- High Contrast Dark and Dark Premium syntax/editor/sidebars are unchanged. Do not claim custom SVG icon colours or IDE-owned UI elements are controlled by theme tokens.
